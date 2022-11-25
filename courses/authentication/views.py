@@ -39,7 +39,7 @@ class RegisterView(generics.GenericAPIView):
         data = {'email_body': email_body, 'to_email': user.email,
                 'email_subject': 'Verify your email'}
         return Response({'status': 'True',
-                         'messege':'email created', 'data':user_data,"token":str(RefreshToken.access_token_class.for_user(user)) } , status=status.HTTP_201_CREATED)
+                         'messege':'email created', 'data':user_data,"accessToken":str(RefreshToken.access_token_class.for_user(user)), 'refreshToken':str(RefreshToken.for_user(user)) } , status=status.HTTP_201_CREATED)
 
 class VerifyEmail(views.APIView):
     serializer_class = EmailVerificationSerializer
