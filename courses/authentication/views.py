@@ -15,6 +15,10 @@ from django.shortcuts import redirect
 from django.http import HttpResponsePermanentRedirect
 import os
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
+from uuid import getnode as get_mac
+import uuid
+import netifaces
+
 
 # Create your views here.
 class RegisterView(generics.GenericAPIView):
@@ -22,6 +26,7 @@ class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
     def post(self, request):
+
         user = request.data
         serializer = self.serializer_class(data=user)
         serializer.is_valid(raise_exception=True)
@@ -31,6 +36,8 @@ class RegisterView(generics.GenericAPIView):
         token = RefreshToken.for_user(user)
         current_site = get_current_site(request).domain
         user33 = auth.authenticate(email= user.email, password= user.password)
+        
+        
 
         relativeLink = reverse('auth:email-verify')
         absurl = 'http://'+current_site+relativeLink+"?token="+str(token)
@@ -69,6 +76,9 @@ class LoginAPIView(generics.GenericAPIView):
 
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
+        from uuid import getnode as get_mac
+        mac = get_mac()
+        print (mac)
 
         return Response(serializer.data, status= status.HTTP_200_OK)
 

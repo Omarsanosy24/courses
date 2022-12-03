@@ -11,15 +11,17 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
+from uuid import getnode as get_mac
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
 
     class Meta:
         model = User
-        fields = ['email', 'username', 'password', 'phone', ]
+        fields = ['email', 'username', 'password', 'phone','year', 'device' ]
 
     def validate(self, attrs):
         email = attrs.get('email', '')
+        
 
 
 
@@ -44,32 +46,28 @@ class LoginSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=2000, min_length=3, read_only=True)
     accessTokens = serializers.CharField(max_length=200000, min_length=6, read_only=True)
     refreshTokens = serializers.CharField(max_length=200000, min_length=6, read_only=True)
-
+    mac = serializers.CharField(max_length = 200, write_only = True)
     class Meta:
         model = User
-        fields = ['email', 'password', 'username', 'accessTokens', 'id','refreshTokens']
+        fields = ['email', 'password', 'username', 'accessTokens', 'id','refreshTokens', 'mac']
 
     def validate(self, attrs):
         email=attrs.get('email','')
         password=attrs.get('password','')
         try:
             user = auth.authenticate(email= email, password= password)
- 
+            
             if not user:
                 raise AuthenticationFailed('Invalid credentials, try again')
-            uu = User.objects.get(email = email)
-            black = OutstandingToken.objects.filter(user = uu)
-            #for i in black:
-             #   if i in BlacklistedToken.objects.all():
-              #      print('omar')
-               # else:
-                #    raise AuthenticationFailed('الحساب مستخدم من قبل شخص اخر')
+            mac = attrs.get('mac')
+            if user.device == None:
+                user.device = mac
+                print (user.device)
+                user.save()
+                print(user.device)
+            if user.device != mac:
+                raise AuthenticationFailed('you can not login')
 
-            for i in black:
-                BlacklistedToken.objects.get_or_create(token = i)
-                print("oooo")
-            user = auth.authenticate(email= email, password= password)
- 
             if not user.is_verified:
                 raise AuthenticationFailed('email is not verified')
 
@@ -87,22 +85,18 @@ class LoginSerializer(serializers.ModelSerializer):
 
         except:
             user = auth.authenticate(email= email, password= password)
- 
+            
             if not user:
                 raise AuthenticationFailed('Invalid credentials, try again')
-            uu = User.objects.get(email = email)
-            black = OutstandingToken.objects.filter(user = uu)
-            #for i in black:
-             #   if i in BlacklistedToken.objects.all():
-              #      print('omar')
-               # else:
-                #    raise AuthenticationFailed('الحساب مستخدم من قبل شخص اخر')
+            mac = attrs.get('mac')
+            if user.device == None:
+                user.device = mac
+                print (user.device)
+                user.save()
+                print(user.device)
+            if user.device != mac:
+                raise AuthenticationFailed('you can not login')
 
-            for i in black:
-                BlacklistedToken.objects.get_or_create(token = i)
-                print("oooo")
-            user = auth.authenticate(email= email, password= password)
- 
             if not user.is_verified:
                 raise AuthenticationFailed('email is not verified')
 

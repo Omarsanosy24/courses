@@ -5,11 +5,8 @@ from django.contrib.auth.models import (
     AbstractBaseUser, BaseUserManager, PermissionsMixin)
 from django_session_jwt.middleware.session import SessionMiddleware, BaseSessionMiddleware
 from django.contrib.sessions.models import Session
-
 from django.db import models
 from rest_framework_simplejwt.tokens import RefreshToken
-
-
 class UserManager(BaseUserManager):
 
     def create_user(self, username, email, password=None, **extra_fields):
@@ -45,7 +42,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    device = models.CharField(max_length=1000, null=True, blank=True)
     phone = models.CharField(max_length=20, null=True, blank=True)
+    year = models.ForeignKey(to='course.year', on_delete=models.PROTECT, null=True, blank=True)
+
 
 
     USERNAME_FIELD = 'email'
