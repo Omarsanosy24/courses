@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-=dkz_mvex+ve$jv@!+mtqshdsx(cq=#vl4p1dxt_fyh*()79w%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'media']
 
 
 # Application definition
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'django_user_agents',
     "rest_framework_api_key",
+    'website',
 
 
 ]
@@ -114,7 +115,7 @@ ROOT_URLCONF = 'courses.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

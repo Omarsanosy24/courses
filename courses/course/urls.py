@@ -3,7 +3,7 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from .views import *
 from . import views
-
+app_name = 'api'
 urlpatterns = [
     path('course/', teacherView.as_view() ),
     path('star/', Star.as_view() ),

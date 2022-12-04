@@ -1,4 +1,3 @@
-import netifaces
-r = netifaces.interfaces()
+import datetime
 
 print (r)
