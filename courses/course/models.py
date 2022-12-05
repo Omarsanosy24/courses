@@ -30,7 +30,7 @@ class CatCourses(models.Model):
     name = models.CharField(max_length=100)
     des = models.TextField()
     price = models.IntegerField()
-    image = models.ImageField(upload_to='CatCourses/%y/%m/%d')
+    image = models.ImageField(upload_to='CatCourses/%y/%m/%d', null=True , blank= True)
     year = models.ForeignKey(year, on_delete=models.CASCADE, related_name='ye')
     star = models.BooleanField(default=False, null=True, blank=True)
     active = models.BooleanField(default=True, null=True, blank=True)
@@ -57,6 +57,7 @@ class Banars(models.Model):
 class Cart(models.Model):
     userCart = models.OneToOneField(User, on_delete=models.CASCADE, related_name= 'userCart')
     totlaPrice = models.DecimalField(decimal_places=2, max_digits=100, null = True, blank = True, default=0.00)
+    url = models.TextField(null=True, blank=True)
     
 
     def __str__(self):

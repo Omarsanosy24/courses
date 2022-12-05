@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-=dkz_mvex+ve$jv@!+mtqshdsx(cq=#vl4p1dxt_fyh*()79w%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'media']
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -101,8 +101,10 @@ API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',

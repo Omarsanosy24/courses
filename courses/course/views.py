@@ -73,6 +73,8 @@ class AddToCArt(generics.GenericAPIView):
                 CartItem.objects.create(userCartItem = user,cart= car, Courses=id, price=int(id.price))
                 carr = Cart.objects.get(userCart= request.user)
                 r = CartItem.objects.filter(cart = carr)
+                carr.totlaPrice = 0
+                carr.save()
                 for i in r:
                 
                     carr.totlaPrice = carr.totlaPrice + i.price
