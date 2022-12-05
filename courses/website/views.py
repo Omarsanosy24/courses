@@ -586,8 +586,11 @@ class bay(APIView):
                 for p in y:
                     p.Courses.users.add(user)
                     p.delete()
+                mony.objects.create(cart = pp, price = pp.totlaPrice)
+
                 pp.totlaPrice = int (00)
                 pp.save()
+                
                 context = {
                     "cartItem":y,
                     "price":pp.totlaPrice,
