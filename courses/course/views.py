@@ -49,6 +49,13 @@ class CoursesViews(generics.GenericAPIView):
                     ii = request.query_params['YearId']
                     l = CatCourses.objects.filter(year = ii).all()
                     serializers = CatCourseSerializers(l, many = True)
+                    try:
+                        if request.query_params:
+                            iii = request.query_params['CourseId']
+                            ll = CatCourses.objects.get(id = iii)
+                            serializers = CatCourseSerializers(ll)
+                    except:
+                        pass
             except:
                 pass
         else:
@@ -114,4 +121,46 @@ class CartView(generics.GenericAPIView):
         s = CartSerializers11(cartt, many=True)
         return Response({"data":s.data}, status=status.HTTP_200_OK)
             
-              
+class MyCoursesView(generics.GenericAPIView):
+    serializer_class = CatCourseSerializers
+    permission_classes = [IsAuthenticated, HasAPIKey]
+    def get(self,request):
+        user = request.user
+        if request.query_params:
+            pp = request.query_params['CourseId']
+            y = CatCourses.objects.get(id = pp)
+            serializers = CatWithvideSerializers(y)
+            try:
+                if request.query_params:
+                    ll = request.query_params['VideoId']
+                    yy = Courses.objects.get(id = ll)
+                    serializers = CourseSerializers(yy)
+            except:
+                pass
+        else:
+            d = CatCourses.objects.filter(users = user).all()
+            serializers = CatCourseSerializers(d , many = True)
+        return Response({"data":serializers.data},status=status.HTTP_200_OK)
+
+    
+class BanarsView(generics.GenericAPIView):
+    serializer_class = BannarsSerializers
+    permission_classes = [IsAuthenticated, HasAPIKey]
+    def get (self , request):
+        qq = Banars.objects.all()
+        serializers = self.serializer_class(qq , many = True)
+        return Response({"data":serializers.data},status=status.HTTP_200_OK)
+
+class RecomendedView(generics.GenericAPIView):
+    serializer_class = CatCourseSerializers
+    permission_classes = [IsAuthenticated, HasAPIKey]
+    def get (self , request):
+        user = request.user
+        if request.query_params:
+            pp = request.query_params['CourseId']
+            yy = CatCourses.objects.get(id = pp)
+            serializers = self.serializer_class(yy)
+        else:
+            ll = CatCourses.objects.filter(year = user.year).all()
+            serializers = self.serializer_class(ll, many = True)
+        return Response({"data":serializers.data}, status= status.HTTP_200_OK)

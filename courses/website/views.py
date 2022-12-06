@@ -31,6 +31,7 @@ class index(APIView):
                 for l in d:
                     o = o + l.price    
                 context = {
+                    'bannars':Banars.objects.all(),
                     'usercount': User.objects.all().count(),
                     'course': CatCourses.objects.all(),
                     "teacher":Teacher.objects.all(),
@@ -608,3 +609,76 @@ class bay(APIView):
             response.delete_cookie('logged_in')
 
             return response
+
+class BannarView(APIView):
+    def get(self,request):
+        try:
+            if 'logged_in' in request.COOKIES and 'Access_Token' in request.COOKIES:
+                context = {
+                    "forms": BannarForms(),
+                    "dd":"create"
+
+                }
+                return render( request,'forms.html', context=context)
+            else:
+                return redirect('pages:login')
+        except:
+            response = redirect('pages:index')
+
+            # deleting cookies
+            response.delete_cookie('Access_Token')
+            response.delete_cookie('logged_in')
+
+            return response
+    def post(self, request):
+        if request.method == "POST":
+            add_course = BannarForms(request.POST, request.FILES)
+            if add_course.is_valid():
+                add_course.save()
+                
+                
+            
+                context={
+                    "message":"done",
+                    "forms": BannarForms(),
+                    "dd":"create"
+                }
+                return render(request,'forms.html', context=context)
+            else:
+                
+                context={
+                    "message":"تأكد من كتابة كل العناصر",
+                    "forms": BannarForms(),
+                    "dd":"create"
+                }
+                return render(request, 'forms.html', context=context)
+
+class DeleteBanars(APIView):
+    def get(self,request, id):
+        bb = Banars.objects.get(id = id)
+        try:
+            if 'logged_in' in request.COOKIES and 'Access_Token' in request.COOKIES:
+                context = {
+                    "forms": BannarForms(instance=bb),
+                    "dd":"delete"
+                }
+                return render( request,'forms.html', context=context)
+            else:
+                return redirect('pages:login')
+        except:
+            response = redirect('pages:index')
+
+            # deleting cookies
+            response.delete_cookie('Access_Token')
+            response.delete_cookie('logged_in')
+
+            return response
+            
+    def post(self, request, id):
+        bb = Banars.objects.get(id = id)
+        bb.delete()
+        context = {
+            "messagee":"deleted done",
+            "dd":"delete"
+        }
+        return redirect ('pages:index' )

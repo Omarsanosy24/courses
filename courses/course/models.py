@@ -44,7 +44,7 @@ class Courses(models.Model):
     name = models.CharField(max_length=100)
     des = models.TextField()
     video = models.FileField(upload_to='courses/%y/%m/%d')
-    CatCourses = models.ForeignKey(CatCourses, on_delete=models.CASCADE)
+    CatCourses = models.ForeignKey(CatCourses, on_delete=models.CASCADE, related_name='videos')
     def __str__(self) -> str:
         return self.name
 

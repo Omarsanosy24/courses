@@ -20,6 +20,8 @@ urlpatterns = [
     path('TeacherDelete/<int:id>/', DeleteTeacher.as_view(), name="DeleteTeacher"),
     path('CourseDelete/<int:id>/', DeleteCatCourse.as_view(), name="DeleteCatCourse"),
     path('Puy/<int:id>/', bay.as_view(), name="puy"),
+    path('Bannarsforms', BannarView.as_view(), name="Bannars"),
+    path('BannarDelete/<int:id>/', DeleteBanars.as_view(), name="DeleteBannars"),
     
 
 

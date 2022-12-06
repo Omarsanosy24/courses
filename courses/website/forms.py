@@ -43,3 +43,12 @@ class VideoForms (forms.ModelForm):
             'CatCourses': forms.Select(attrs={ "class":'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'}),
 
         }
+class BannarForms (forms.ModelForm):
+    class Meta:
+        model = Banars
+        fields = ['image']
+
+        widgets = {
+            'image': forms.FileInput(attrs={ "class":'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'}),
+
+        }

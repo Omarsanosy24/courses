@@ -67,3 +67,15 @@ class teacherSerializers1(serializers.ModelSerializer):
     class Meta:
         model = Teacher
         fields = '__all__'
+
+class CatWithvideSerializers(serializers.ModelSerializer):
+    videos = CourseSerializers(read_only = True, many = True)
+    class Meta:
+        model = CatCourses
+        fields = '__all__'
+    
+class BannarsSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Banars
+        fields = '__all__'
+

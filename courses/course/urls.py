@@ -11,5 +11,8 @@ urlpatterns = [
     path('addToCart/', AddToCArt.as_view() ),
     path('Cart/', CartView.as_view() ),
     path('teachers/', teacherView.as_view() ),
+    path('MyCourses/', MyCoursesView.as_view() ),
+    path('banars/', BanarsView.as_view() ),
+    path('Recomended/', RecomendedView.as_view() ),
 
 ] 
