@@ -21,8 +21,10 @@ class yearSerializers(serializers.ModelSerializer):
     class Meta:
         model = year
         fields = ['id','name']
-class CatCourseSerializers(serializers.ModelSerializer):
-    
+class CatCourseSerializers1(serializers.ModelSerializer):
+    teacher = teacherSerializers(read_only = True)
+    year = serializers.SlugRelatedField(slug_field='name', read_only = True)
+
     class Meta:
         model = CatCourses
         fields = '__all__'
@@ -43,12 +45,12 @@ class collegeSerializers(serializers.ModelSerializer):
 
 class CartItemSerilaizers(serializers.ModelSerializer):
     
-    Courses = CatCourseSerializers(many = True)
+    Courses = CatCourseSerializers1(many = True)
     class Meta:
         model = CartItem
         fields = '__all__'
 class CartItemSer(serializers.ModelSerializer):
-    Courses = CatCourseSerializers( read_only = True)
+    Courses = CatCourseSerializers1( read_only = True)
 
     class Meta:
         model = CartItem
@@ -63,7 +65,7 @@ class CartSerializers11(serializers.ModelSerializer):
     
 
 class teacherSerializers1(serializers.ModelSerializer):
-    cources = CatCourseSerializers(many = True , read_only = True)
+    cources = CatCourseSerializers1(many = True , read_only = True)
     class Meta:
         model = Teacher
         fields = '__all__'
@@ -79,3 +81,10 @@ class BannarsSerializers(serializers.ModelSerializer):
         model = Banars
         fields = '__all__'
 
+class CatCourseSerializers(serializers.ModelSerializer):
+    teacher = teacherSerializers(read_only = True)
+    year = serializers.SlugRelatedField(slug_field='name', read_only = True)
+
+    class Meta:
+        model = CatCourses
+        fields = '__all__'

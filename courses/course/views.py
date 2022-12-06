@@ -37,7 +37,7 @@ class Star(generics.GenericAPIView):
 
 class CoursesViews(generics.GenericAPIView):
     serializer_class = YearSerializerswithCatCourses
-    permission_classes = [IsAuthenticated , HasAPIKey]
+    permission_classes = [AllowAny]
     def get(self,request):
         if request.query_params:
                             
@@ -47,13 +47,19 @@ class CoursesViews(generics.GenericAPIView):
             try:
                 if request.query_params:
                     ii = request.query_params['YearId']
-                    l = CatCourses.objects.filter(year = ii).all()
-                    serializers = CatCourseSerializers(l, many = True)
+                    oo = request.query_params['Term']
+                    yy = CatCourses.objects.filter(year = ii)
+                    oooo = yy.filter(term = oo).filter(active = True).all()
+                    serializers = CatCourseSerializers(oooo, many = True)
+                    
+
                     try:
                         if request.query_params:
                             iii = request.query_params['CourseId']
                             ll = CatCourses.objects.get(id = iii)
                             serializers = CatCourseSerializers(ll)
+                            
+                        
                     except:
                         pass
             except:
