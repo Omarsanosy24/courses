@@ -167,6 +167,6 @@ class RecomendedView(generics.GenericAPIView):
             yy = CatCourses.objects.get(id = pp)
             serializers = self.serializer_class(yy)
         else:
-            ll = CatCourses.objects.filter(year = user.year).all()
+            ll = CatCourses.objects.filter(year = user.year).filter(active = True).all()
             serializers = self.serializer_class(ll, many = True)
         return Response({"data":serializers.data}, status= status.HTTP_200_OK)
