@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'authentication',
     'course',
     'rest_framework_simplejwt.token_blacklist',
-    'django_user_agents',
     "rest_framework_api_key",
     'website',
 

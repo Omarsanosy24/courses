@@ -17,7 +17,6 @@ import os
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
 from uuid import getnode as get_mac
 import uuid
-import netifaces
 
 
 # Create your views here.
