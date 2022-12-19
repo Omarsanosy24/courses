@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/2685e264-7f23-4e74-bd46-99e0ed076b74/AppServices/subscriptions/2685e264-7f23-4e74-bd46-99e0ed076b74/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/onze-egypt",
+    "appService.deploySubpath": "."
+}

@@ -195,7 +195,7 @@ class Forms(APIView):
                 
                 context={
                     "message":"تأكد من كتابة كل العناصر",
-                    "forms": TeacherForms,
+                    "forms": TeacherForms(),
                     "dd":"create"
                 }
                 return render(request, 'forms.html', context=context)
@@ -583,6 +583,7 @@ class bay(APIView):
             if 'logged_in' in request.COOKIES and 'Access_Token' in request.COOKIES:
                 pp = Cart.objects.get(id = id)
                 y = CartItem.objects.filter(cart = pp).all()
+                
                 user = pp.userCart
                 for p in y:
                     p.Courses.users.add(user)

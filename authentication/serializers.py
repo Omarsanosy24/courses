@@ -12,6 +12,7 @@ from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnico
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
 from uuid import getnode as get_mac
+from rest_framework import status
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
 
@@ -21,11 +22,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         email = attrs.get('email', '')
-        
-
-
 
         
+
+        
+
         return attrs
 
     def create(self, validated_data):
@@ -58,22 +59,36 @@ class LoginSerializer(serializers.ModelSerializer):
             user = auth.authenticate(email= email, password= password)
             
             if not user:
-                raise AuthenticationFailed('Invalid credentials, try again')
+                return {
+                'email':"you are not register, or your password is incorrect",
+                'username': "user.username",
+                
+            }
             mac = attrs.get('mac')
             if user.device == None:
                 user.device = mac
-                print (user.device)
                 user.save()
-                print(user.device)
             if user.device != mac:
-                raise AuthenticationFailed('you can not login')
+                return {
+                'email':"you can't login use this email",
+                'username': "user.username",
+                
+            }
 
             if not user.is_verified:
-                raise AuthenticationFailed('email is not verified')
+                return {
+                'email':"you can't login use this email",
+                'username': "user.username",
+                
+            }
 
 
             if not user.is_active:
-                raise AuthenticationFailed('الحساب مغلق، اتصل بالمالك')
+                return {
+                'email':"your email is closed, call the owner",
+                'username': "user.username",
+                
+            }
 
             return {
                 'email':user.email,
@@ -84,10 +99,8 @@ class LoginSerializer(serializers.ModelSerializer):
             return super().validate(attrs)
 
         except:
-            user = auth.authenticate(email= email, password= password)
-            
             if not user:
-                raise AuthenticationFailed('Invalid credentials, try again')
+                raise AuthenticationFailed({'status':False, "message":'Invalid credentials, try again', 'data': {} })
             mac = attrs.get('mac')
             if user.device == None:
                 user.device = mac
@@ -95,15 +108,14 @@ class LoginSerializer(serializers.ModelSerializer):
                 user.save()
                 print(user.device)
             if user.device != mac:
-                raise AuthenticationFailed('you can not login')
+                raise AuthenticationFailed({'status':False, "message":'you can not login use this phone', 'data': {}})
 
             if not user.is_verified:
-                raise AuthenticationFailed('email is not verified')
+                raise AuthenticationFailed({'status':False, "message":'you can not login use this email', 'data': {}})
 
 
             if not user.is_active:
-                raise AuthenticationFailed('الحساب مغلق، اتصل بالمالك')
-
+                raise AuthenticationFailed({'status':False, "message":'this account is closed','data': {}})
             return {
                 'email':user.email,
                 'username': user.username,

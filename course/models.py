@@ -4,7 +4,7 @@ from authentication.models import User
 class Teacher(models.Model):
     name = models.CharField(max_length=50)
     des = models.TextField()
-    image = models.ImageField(upload_to='teacher/%y/%m/%d')
+    image = models.ImageField(upload_to='teacher/%y/%m/%d', null=True , blank=True)
     
     def __str__(self):
         return self.name
@@ -36,6 +36,8 @@ class CatCourses(models.Model):
     active = models.BooleanField(default=True, null=True, blank=True)
     users = models.ManyToManyField(User, blank=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.PROTECT, related_name='cources' ,null=True, blank=True) 
+    cartIcon = models.BooleanField(null=True, blank=True)
+    myCourseIcon = models.BooleanField(null=True, blank=True)
 
     def __str__(self) -> str:
         return (self.name +"  "+self.year.name +" "+self.term)
@@ -43,7 +45,7 @@ class CatCourses(models.Model):
 class Courses(models.Model):
     name = models.CharField(max_length=100)
     des = models.TextField()
-    video = models.FileField(upload_to='courses/%y/%m/%d')
+    video = models.TextField()
     CatCourses = models.ForeignKey(CatCourses, on_delete=models.CASCADE, related_name='videos')
     def __str__(self) -> str:
         return self.name

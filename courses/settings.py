@@ -14,7 +14,6 @@ from pathlib import Path
 import os
 from courses import settings
 from pathlib import Path
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -68,8 +67,8 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'authentication.User'
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=30),
-    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=30),
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=200),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days= 99999),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
     'ALGORITHM': 'HS256',
@@ -80,12 +79,12 @@ SIMPLE_JWT = {
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
 
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.RefreshToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
 
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': datetime.timedelta(minutes=5),
-    'SLIDING_TOKEN_REFRESH_LIFETIME':datetime.timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME': datetime.timedelta(days=30),
+    'SLIDING_TOKEN_REFRESH_LIFETIME':datetime.timedelta(days=30),
 }
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
@@ -189,9 +188,9 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+CSRF_TRUSTED_ORIGINS=['https://*.onze-egypt.azurewebsites.net/', 'https://*']
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'om23440@gmail.com'
-EMAIL_HOST_PASSWORD = 'acfpaukgoimezfkx'
+EMAIL_HOST_USER = 'tosandev2474@gmail.com'
+EMAIL_HOST_PASSWORD = 'rpumallknhjmjoai'

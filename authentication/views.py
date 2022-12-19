@@ -1,5 +1,8 @@
+from logging import exception
 from django.shortcuts import render
 from rest_framework import generics, status, views,  permissions
+from rest_framework.authentication import TokenAuthentication
+
 from .serializers import *
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -12,8 +15,10 @@ from django.conf import settings
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django.shortcuts import redirect
+from rest_framework.views import APIView
 from django.http import HttpResponsePermanentRedirect
 import os
+import json
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
 from uuid import getnode as get_mac
 import uuid
@@ -28,8 +33,10 @@ class RegisterView(generics.GenericAPIView):
 
         user = request.data
         serializer = self.serializer_class(data=user)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        if serializer.is_valid():
+            serializer.save()
+        else: 
+            return Response({'status':False, 'message':'This email already exists ', 'data':None, 'accessToken': None, 'refreshToken':None },status=status.HTTP_200_OK)
         user_data = serializer.data
         user = User.objects.get(email=user_data['email'])
         token = RefreshToken.for_user(user)
@@ -44,8 +51,8 @@ class RegisterView(generics.GenericAPIView):
             ' Use the link below to verify your email \n' + absurl+ '\n'+'with bist wishes'
         data = {'email_body': email_body, 'to_email': user.email,
                 'email_subject': 'Verify your email'}
-        return Response({'status': 'True',
-                         'messege':'email created', 'data':user_data,"accessToken":str(RefreshToken.access_token_class.for_user(user)), 'refreshToken':str(RefreshToken.for_user(user)) } , status=status.HTTP_201_CREATED)
+        return Response({'status': True,
+                         'message':'email created', 'data':user_data,"accessToken":str(RefreshToken.access_token_class.for_user(user)), 'refreshToken':str(RefreshToken.for_user(user)) } , status=status.HTTP_201_CREATED)
 
 class VerifyEmail(views.APIView):
     serializer_class = EmailVerificationSerializer
@@ -75,12 +82,13 @@ class LoginAPIView(generics.GenericAPIView):
 
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        from uuid import getnode as get_mac
-        mac = get_mac()
-        print (mac)
-
-        return Response(serializer.data, status= status.HTTP_200_OK)
-
+        
+        if 'accessTokens' in serializer.data.keys():
+        
+            return Response({'status':True ,'message':'logged successfully','data':serializer.data}, status= status.HTTP_200_OK)
+        else:
+            r = serializer.data.get('email')
+            return Response({'status':False ,'message': r ,'data':{}}, status= status.HTTP_200_OK)
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer
@@ -105,8 +113,8 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             data = {'email_body': email_body, 'to_email': user.email,
                     'email_subject': 'Reset your passsword'}
             Util.send_email(data)
-            return Response({'success': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
-        return Response({'error': 'this email is not register'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'status':True,'message': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
+        return Response({'status':False,'message': 'this email is not register'}, status=status.HTTP_200_OK)
 
 
 class PasswordTokenCheckAPI(generics.GenericAPIView):
@@ -145,9 +153,12 @@ class LogoutAPIView(generics.GenericAPIView):
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        if serializer.is_valid():
+            serializer.save()
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response({'status':True,'message':'logout done'},status=status.HTTP_200_OK)
+        else:
+            return Response({'status':False,'message':'invalid refresh token'},status=status.HTTP_200_OK)
+
 
 

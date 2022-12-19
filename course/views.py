@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 class teacherView (generics.GenericAPIView):
     serializer_class = teacherSerializers
-    permission_classes = [IsAuthenticated , HasAPIKey]
+    permission_classes = [IsAuthenticated]
     def get (self,request):
         if request.query_params:
             id1 = request.query_params['id']
@@ -28,10 +28,50 @@ class Star(generics.GenericAPIView):
         if request.query_params:                
             id1 = request.query_params['id']
             d = CatCourses.objects.get(id=id1)
+            user = request.user
+            d.myCourseIcon = False
+            d.save()
+            ls = CartItem.objects.filter(userCartItem = user).all()
+            for op in ls:
+                op.Courses.cartIcon = False
+                op.Courses.save()
+            
+
+            if user in d.users.all():
+                d.myCourseIcon = True
+                d.save()
+            else:
+                d.myCourseIcon = False
+                d.save()
             serializers = CatCourseSerializers(d)
             
         else:
-            d = CatCourses.objects.filter(star = True).filter(active = True)
+            d = CatCourses.objects.filter(star = True).filter(active = True).all()
+            user = request.user
+            
+            
+            
+                
+                
+            for i in d:
+                if user in i.users.all():
+                    i.myCourseIcon = True
+                    i.cartIcon = False
+                    if CartItem.objects.filter(Courses = i).filter(userCartItem = user).exists():
+                        i.cartIcon = True
+                    i.save()
+
+
+                    
+                else:
+                    i.myCourseIcon = False
+                    i.cartIcon = False
+                    
+                    if CartItem.objects.filter(Courses = i).filter(userCartItem = user).exists():
+                        i.cartIcon = True
+                    i.save
+            
+                
             serializers = CatCourseSerializers(d , many=True)
         return Response({"data":serializers.data},status=status.HTTP_200_OK)
 
@@ -49,7 +89,21 @@ class CoursesViews(generics.GenericAPIView):
                     ii = request.query_params['YearId']
                     oo = request.query_params['Term']
                     yy = CatCourses.objects.filter(year = ii)
+                    user = request.user
                     oooo = yy.filter(term = oo).filter(active = True).all()
+                    for i in oooo:
+                        if user in i.users.all():
+                            i.myCourseIcon = True
+                            i.cartIcon = False
+                            if CartItem.objects.filter(Courses = i).filter(userCartItem = user).exists():
+                                i.cartIcon = True
+                            i.save()
+                        else:
+                            i.myCourseIcon = False
+                            i.cartIcon = False
+                            if CartItem.objects.filter(Courses = i).filter(userCartItem = user).exists():
+                                i.cartIcon = True
+                            i.save()
                     serializers = CatCourseSerializers(oooo, many = True)
                     
 
@@ -57,6 +111,21 @@ class CoursesViews(generics.GenericAPIView):
                         if request.query_params:
                             iii = request.query_params['CourseId']
                             ll = CatCourses.objects.get(id = iii)
+
+                            for i in ll:
+                                if user in i.users.all():
+                                    i.myCourseIcon = True
+                                    i.cartIcon = False
+                                    if CartItem.objects.filter(Courses = i).filter(userCartItem = user).exists():
+                                        i.cartIcon = True
+                                    i.save()
+
+                                else:
+                                    i.myCourseIcon = False
+                                    i.cartIcon = False
+                                    if CartItem.objects.filter(Courses = i).filter(userCartItem = user).exists():
+                                        i.cartIcon = True
+                                    i.save()
                             serializers = CatCourseSerializers(ll)
                             
                         
@@ -165,8 +234,34 @@ class RecomendedView(generics.GenericAPIView):
         if request.query_params:
             pp = request.query_params['CourseId']
             yy = CatCourses.objects.get(id = pp)
+            if user in yy.users.all():
+                yy.myCourseIcon = True
+                yy.cartIcon = False
+                if CartItem.objects.filter(Courses = yy).filter(userCartItem = user).exists():
+                    yy.cartIcon = True
+                yy.save()
+            else:
+                yy.myCourseIcon = False
+                yy.cartIcon = False
+                if CartItem.objects.filter(Courses = yy).filter(userCartItem = user).exists():
+                    yy.cartIcon = True
+                yy.save()
             serializers = self.serializer_class(yy)
         else:
             ll = CatCourses.objects.filter(year = user.year).filter(active = True).all()
+            for i in ll:
+                if user in i.users.all():
+                    i.myCourseIcon = True
+                    i.cartIcon = False
+                    if CartItem.objects.filter(Courses = i).filter(userCartItem = user).exists():
+                        i.cartIcon = True
+                    i.save()
+                    
+                else:
+                    i.myCourseIcon = False
+                    i.cartIcon = False
+                    if CartItem.objects.filter(Courses = i).filter(userCartItem = user).exists():
+                        i.cartIcon = True
+                    i.save()
             serializers = self.serializer_class(ll, many = True)
         return Response({"data":serializers.data}, status= status.HTTP_200_OK)

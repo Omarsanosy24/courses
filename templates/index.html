@@ -221,7 +221,7 @@
                     d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
                   ></path>
                 </svg>
-                <span class="ml-4">Forms</span>
+                <span class="ml-4">Teacher</span>
               </a>
             </li>
             <li class="relative px-6 py-3">
@@ -398,7 +398,7 @@
                     d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
                   ></path>
                 </svg>
-                <span class="ml-4">Forms</span>
+                <span class="ml-4">Teacher</span>
               </a>
             </li>
             <li class="relative px-6 py-3">
@@ -763,12 +763,22 @@
                           <div
                             class="relative hidden w-8 h-8 mr-3 rounded-full md:block"
                           >
+                            {% if i.image %}
                             <img
                               class="object-cover w-full h-full rounded-full"
                               src="{{i.image.url}}"
                               alt=""
                               loading="lazy"
                             />
+                            {% else %}
+                            <img
+                              class="object-cover w-full h-full rounded-full"
+                              src="{% static 'logo/wwww-removebg-preview.png' %}"
+                              alt=""
+                              loading="lazy"
+
+                            />
+                            {% endif %}
                             <div
                               class="absolute inset-0 rounded-full shadow-inner"
                               aria-hidden="true"
@@ -873,12 +883,22 @@
                           <div
                             class="relative hidden w-8 h-8 mr-3 rounded-full md:block"
                           >
-                            <img
-                              class="object-cover w-full h-full rounded-full"
-                              src="{{t.image.url}}"
-                              alt=""
-                              loading="lazy"
-                            />
+                          {% if t.image %}
+                          <img
+                            class="object-cover w-full h-full rounded-full"
+                            src="{{t.image.url}}"
+                            alt=""
+                            loading="lazy"
+                          />
+                          {% else %}
+                          <img
+                            class="object-cover w-full h-full rounded-full"
+                            src="{% static 'logo/wwww-removebg-preview.png' %}"
+                            alt=""
+                            loading="lazy"
+
+                          />
+                          {% endif %}
                             <div
                               class="absolute inset-0 rounded-full shadow-inner"
                               aria-hidden="true"

@@ -20,7 +20,7 @@ post_save.connect(create_profile, sender=User)
 def update_cart(sender,instance,created,**kwargs):
     if created:
         p = Cart.objects.get(userCart = instance)
-        current_site = "http://127.0.0.1:8000/pages/Puy/"
+        current_site = "https://onze-egypt.azurewebsites.net/pages/Puy/"
         
         print (p.pk)
         p.url = current_site + str(p.pk) + '/'
